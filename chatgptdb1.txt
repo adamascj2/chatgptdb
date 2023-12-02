@@ -1,0 +1,6 @@
+﻿using OpenAI_API;
+var openAi = new OpenAIAPI(new APIAuthentication("SUA-SECRET-KEY"));
+var conversation = openAi.Chat.CreateConversation();
+conversation.AppendUserInput("Qual a capital da Belgica?");
+var response = await conversation.GetResponseFromChatbotAsync();
+Console.WriteLine(response);
