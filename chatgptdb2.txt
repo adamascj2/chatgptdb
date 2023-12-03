@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenAI_API;
 
-namespace ChatGPT2
+namespace ChatGPTdb2
 {
     public partial class MainForm : Form
     {
@@ -14,7 +14,7 @@ namespace ChatGPT2
 
         public MainForm()
         {
-            openAi = new OpenAIAPI(new APIAuthentication("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"));
+            openAi = new OpenAIAPI(new APIAuthentication("SUA-SECRET´KEY"));
             InitializeUI();
         }
 
