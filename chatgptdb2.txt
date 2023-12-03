@@ -14,7 +14,7 @@ namespace ChatGPTdb2
 
         public MainForm()
         {
-            openAi = new OpenAIAPI(new APIAuthentication("SUA-SECRET¥KEY"));
+            openAi = new OpenAIAPI(new APIAuthentication("SUA-SECRET-KEY"));
             InitializeUI();
         }
 
@@ -26,23 +26,23 @@ namespace ChatGPTdb2
             inputTextBox.Location = new System.Drawing.Point(20, 20);
             inputTextBox.Size = new System.Drawing.Size(200, 150);
 
-            // Criando o TextBox de saÌda com scroll
+            // Criando o TextBox de sa√≠da com scroll
             outputTextBox = new TextBox();
             outputTextBox.Location = new System.Drawing.Point(250, 20);
             outputTextBox.Size = new System.Drawing.Size(200, 150);
-            outputTextBox.Multiline = true; // Habilitando v·rias linhas
+            outputTextBox.Multiline = true; // Habilitando v√°rias linhas
             outputTextBox.ScrollBars = ScrollBars.Vertical; // Adicionando barra de rolagem vertical
 
-            // Criando o bot„o de envio
+            // Criando o bot√£o de envio
             sendButton = new Button();
             sendButton.Location = new System.Drawing.Point(20, 180);
             sendButton.Size = new System.Drawing.Size(100, 30);
             sendButton.Text = "Enviar";
 
-            // Adicionando evento ao clicar no bot„o
+            // Adicionando evento ao clicar no bot√£o
             sendButton.Click += async (sender, e) => await SendButton_ClickAsync(sender, e);
 
-            // ... Adicionando os controles ao formul·rio
+            // ... Adicionando os controles ao formul√°rio
             Controls.Add(inputTextBox);
             Controls.Add(outputTextBox);
             Controls.Add(sendButton);
@@ -54,7 +54,7 @@ namespace ChatGPTdb2
             conversation.AppendUserInput(inputTextBox.Text);
             var response = await conversation.GetResponseFromChatbotAsync();
 
-            // Ao clicar no bot„o, a resposta do chatbot È exibida no TextBox de saÌda
+            // Ao clicar no bot√£o, a resposta do chatbot √© exibida no TextBox de sa√≠da
             outputTextBox.Text = response;
         }
 
