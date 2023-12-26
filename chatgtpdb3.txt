@@ -20,7 +20,7 @@ namespace criaselect
             string selectenv;
             public MainForm()
             {
-                openAi = new OpenAIAPI(new APIAuthentication("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"));
+                openAi = new OpenAIAPI(new APIAuthentication("SECRET KEY"));
                 InitializeUI();
             }
 
