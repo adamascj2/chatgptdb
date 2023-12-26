@@ -1,0 +1,117 @@
+namespace criaselect
+{
+    using System;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+    using OpenAI_API;
+    using System.Net.Http;
+     
+
+    namespace ChatGPTdb2
+    {
+        public partial class MainForm : Form
+        {
+            TextBox inputTextBox;
+            TextBox outputTextBox;
+            Button sendButton;
+            Button sendButton2;
+            private OpenAIAPI openAi;
+            string INTRO = "";
+            string selectenv;
+            public MainForm()
+            {
+                openAi = new OpenAIAPI(new APIAuthentication("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"));
+                InitializeUI();
+            }
+
+            private void InitializeUI()
+            {
+                
+                var mensagemenviadaC ="";
+                var  mensagemrecebidaC= "";
+                string scriptnoservidor = "http://americo.somee.com/legravaselect.aspx";
+                INTRO = "Num banco de dados relacional temos a tabela: vendas, com as colunas: produto,categoria,preco,janeiro,fevereiro,marco. Como categorias temos: limpeza,alimentacao e frutas. \r\nCriar um SELECT de SQL para o caso do request que vem a seguir \r\nResponda apenas o SELECT sem colocar em quadro para copia.Apenas o texto.Sem mais comentarios.O request é:";
+                // Criando o TextBox de entrada
+                inputTextBox = new TextBox();
+                inputTextBox.Location = new System.Drawing.Point(20, 20);
+                inputTextBox.Size = new System.Drawing.Size(200, 150);
+                inputTextBox.MaxLength = 10000000;
+                // Criando o TextBox de saída com scroll
+                outputTextBox = new TextBox();
+                outputTextBox.Location = new System.Drawing.Point(250, 20);
+                outputTextBox.Size = new System.Drawing.Size(200, 150);
+                outputTextBox.Multiline = true; // Habilitando várias linhas
+                outputTextBox.ScrollBars = ScrollBars.Vertical; // Adicionando barra de rolagem vertical
+
+                // Criando o botão de envio1
+                sendButton = new Button();
+                sendButton.Location = new System.Drawing.Point(20, 180);
+                sendButton.Size = new System.Drawing.Size(100, 30);
+                sendButton.Text = "Select";
+
+                // Adicionando evento ao clicar no botão
+                sendButton.Click += async (sender, e) => await SendButton_ClickAsync(sender, e);
+
+                // Criando o botão de envio2
+                sendButton2 = new Button();
+                sendButton2.Location = new System.Drawing.Point(20, 210);
+                sendButton2.Size = new System.Drawing.Size(100, 30);
+                sendButton2.Text = "Request";
+
+                // Adicionando evento ao clicar no botão
+                sendButton2.Click += async (sender, e) => await SendButton2_ClickAsync(sender, e);
+
+
+                // ... Adicionando os controles ao formulário
+                Controls.Add(inputTextBox);
+                Controls.Add(outputTextBox);
+                Controls.Add(sendButton);
+                Controls.Add(sendButton2);
+
+            }
+
+            private async Task SendButton_ClickAsync(object sender, EventArgs e)
+            {
+                var conversation = openAi.Chat.CreateConversation();
+                conversation.AppendUserInput(INTRO + inputTextBox.Text);
+                var response = await conversation.GetResponseFromChatbotAsync();
+
+                // Ao clicar no botão, a resposta do chatbot é exibida no TextBox de saída
+                outputTextBox.Text = response;
+                selectenv = response;
+            }
+            private async Task SendButton2_ClickAsync(object sender, EventArgs e)
+            {
+                var url = "http://americo.somee.com/legravaselect.aspx";
+                using (var client = new HttpClient())
+                {
+
+                    HttpResponseMessage response = await client.GetAsync(url +"?mensagemenviadaC="+selectenv);
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync();
+
+                    String mensagemrecebidaC = await response.Content.ReadAsStringAsync();
+                   String mess = (mensagemrecebidaC.Split("$"[0]))[0].ToString();
+
+                    // Aqui você pode usar o responseBody que contém o conteúdo da resposta.
+                    outputTextBox.Clear();
+                       
+                    outputTextBox.Text = mess;
+
+                }
+
+
+
+                      
+            }
+
+            [STAThread]
+            static void Main()
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new MainForm());
+            }
+        }
+    }
+}
